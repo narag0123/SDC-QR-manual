@@ -11,6 +11,7 @@ import {
     List,
     ListOrdered,
     Strikethrough,
+    ImagePlus,
 } from "lucide-react";
 import { Toggle } from "@/components/ui/toggle";
 import { Editor } from "@tiptap/react";
@@ -144,6 +145,35 @@ export default function MenuBar({
                     .toggleHighlight()
                     .run(),
             pressed: editor.isActive("highlight"),
+        },
+        {
+            icon: <ImagePlus className="size-4" />,
+            onClick: async () => {
+                const input =
+                    document.createElement("input");
+                input.type = "file";
+                input.accept = "image/*";
+
+                input.onchange = () => {
+                    const file = input.files?.[0];
+                    if (!file) return;
+
+                    const reader = new FileReader();
+                    reader.onload = () => {
+                        const base64 =
+                            reader.result as string;
+                        editor
+                            .chain()
+                            .focus()
+                            .setImage({ src: base64 })
+                            .run();
+                    };
+                    reader.readAsDataURL(file);
+                };
+
+                input.click();
+            },
+            pressed: false, // 이미지에는 pressed 상태 필요 없음
         },
     ];
 
