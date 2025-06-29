@@ -38,7 +38,9 @@ export const Odd_field = ({ index }: Props) => {
                             {convertFieldKR(index)}
                         </span>
                         <span className="text-base">
-                            {convertFieldEN(index)}
+                            {convertFieldEN(
+                                index
+                            )?.toUpperCase()}
                         </span>
                     </div>
                 </div>

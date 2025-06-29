@@ -146,6 +146,36 @@ export default function MenuBar({
                     .run(),
             pressed: editor.isActive("highlight"),
         },
+
+        // {
+        //     icon: <ImagePlus className="size-4" />,
+        //     onClick: async () => {
+        //         const input =
+        //             document.createElement("input");
+        //         input.type = "file";
+        //         input.accept = "image/*";
+
+        //         input.onchange = () => {
+        //             const file = input.files?.[0];
+        //             if (!file) return;
+
+        //             const reader = new FileReader();
+        //             reader.onload = () => {
+        //                 const base64 =
+        //                     reader.result as string;
+        //                 editor
+        //                     .chain()
+        //                     .focus()
+        //                     .setImage({ src: base64 })
+        //                     .run();
+        //             };
+        //             reader.readAsDataURL(file);
+        //         };
+
+        //         input.click();
+        //     },
+        //     pressed: false, // 이미지에는 pressed 상태 필요 없음
+        // },
         {
             icon: <ImagePlus className="size-4" />,
             onClick: async () => {
@@ -157,6 +187,13 @@ export default function MenuBar({
                 input.onchange = () => {
                     const file = input.files?.[0];
                     if (!file) return;
+
+                    if (file.size > 5 * 1024 * 1024) {
+                        alert(
+                            "이미지 크기가 너무 큽니다. 5MB 이하로 업로드해주세요."
+                        );
+                        return;
+                    }
 
                     const reader = new FileReader();
                     reader.onload = () => {
@@ -171,9 +208,12 @@ export default function MenuBar({
                     reader.readAsDataURL(file);
                 };
 
+                // ✅ 모바일 사파리 대응 (input을 DOM에 append하고 다시 제거)
+                document.body.appendChild(input);
                 input.click();
+                document.body.removeChild(input);
             },
-            pressed: false, // 이미지에는 pressed 상태 필요 없음
+            pressed: false,
         },
     ];
 
