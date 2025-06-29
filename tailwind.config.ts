@@ -11,7 +11,7 @@ const config: Config = {
         extend: {
             fontFamily: {
                 spoqa: [
-                    'Spoqa Han Sans Neo"',
+                    '"Spoqa Han Sans Neo"',
                     "sans-serif",
                 ],
             },
