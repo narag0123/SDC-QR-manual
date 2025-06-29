@@ -34,10 +34,10 @@ export const Odd_field = ({ index }: Props) => {
                     </h1>
                     <hr className="border-black border-l-[0.5px] h-10 my-1" />
                     <div className="font-light">
-                        <span className="text-[20px]">
+                        <span className="text-xl">
                             {convertFieldKR(index)}
                         </span>
-                        <span className="text-[12px]">
+                        <span className="text-base">
                             {convertFieldEN(index)}
                         </span>
                     </div>

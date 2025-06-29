@@ -29,10 +29,10 @@ export const Even_field = ({ index }: Props) => {
                 </div>
                 <div className="font-light flex items-center gap-5">
                     <div>
-                        <span className="text-[20px]">
+                        <span className="text-xl">
                             {convertFieldKR(index)}
                         </span>
-                        <span className="text-[12px]">
+                        <span className="text-base">
                             {convertFieldEN(
                                 index
                             )?.toUpperCase()}

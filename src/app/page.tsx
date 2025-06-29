@@ -11,10 +11,10 @@ import { useGlobalStore } from "./(model)/data/store";
 
 export default function Home() {
     return (
-        <div className="h-full w-full">
-            <h1 className="text-6xl font-thin my-5 leading-tight">
-                SDC 자동제어 <br />
-                매뉴얼
+        <div className=" w-full flex flex-col overflow-hidden">
+            <h1 className="text-3xl font-light my-5 leading-tight">
+                <p>SDC 도로시설팀</p>
+                <p>자동제어 매뉴얼</p>
             </h1>
             <Hr_line />
 
