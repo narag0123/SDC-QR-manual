@@ -13,11 +13,22 @@ import {
     usePathname,
     useRouter,
 } from "next/navigation";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import { JSONContent } from "@tiptap/react";
 
 interface Props {
     local: string;
     field: string;
+}
+
+interface Post {
+    _id: string;
+    title: string;
+    local: string;
+    field: string;
+    content: JSONContent;
+    createdAt: string;
+    updatedAt: string;
 }
 
 export default function FieldPage({
@@ -26,15 +37,38 @@ export default function FieldPage({
     params: Props;
 }) {
     const { local, field } = params;
-    const { localName, setLocalName, fieldName } =
-        useGlobalStore();
+    const {
+        localName,
+        setLocalName,
+        fieldName,
+        setFieldName,
+    } = useGlobalStore();
     const localPathName = usePathname().split("/")[1];
     const router = useRouter();
     const arr = [samplePost];
+    const [posts, setPosts] = useState<Post[]>([]);
 
     useEffect(() => {
         setLocalName(convertLocalNameEN2KR(localPathName));
+        setFieldName(field);
     }, []);
+
+    useEffect(() => {
+        const fetchPosts = async () => {
+            try {
+                const res = await fetch(
+                    `/api/post/${local}/${field}`
+                );
+                const data = await res.json();
+                setPosts(data);
+                console.log(data);
+            } catch (error) {
+                console.error("게시글 로딩 실패:", error);
+            }
+        };
+
+        fetchPosts();
+    }, [local, field]);
 
     return (
         <div>
@@ -49,20 +83,16 @@ export default function FieldPage({
             </div>
             <Hr_line />
             <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8 gap-4 mt-3">
-                {arr.map((e, i) => {
-                    return convertLocalNameEN2KR(local) ==
-                        e?.local && field == e?.field ? (
-                        <div
+                {posts.map((e, i) => {
+                    return (
+                        <a
+                            href={`/${local}/${field}/${i}`}
                             className="flex flex-col items-center justify-center my-3"
                             key={i}
                         >
                             <img src="/img/file.svg" />
                             <p>{e?.title}</p>
-                        </div>
-                    ) : (
-                        <React.Fragment
-                            key={i}
-                        ></React.Fragment>
+                        </a>
                     );
                 })}
             </div>

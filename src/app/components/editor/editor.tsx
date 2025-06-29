@@ -21,7 +21,7 @@ export default function Editor({
     content,
     onChange,
 }: RichTextEditorProps) {
-    const MAX_IMAGE_SIZE_MB = 25;
+    const MAX_IMAGE_SIZE_MB = 5;
 
     const editor = useEditor({
         extensions: [
@@ -44,14 +44,14 @@ export default function Editor({
             Image.configure({
                 inline: false,
                 HTMLAttributes: {
-                    class: "rounded max-w-full my-2",
+                    class: "w-full h-auto rounded my-2",
                 },
             }),
         ],
         content: content || { type: "doc", content: [] },
         editorProps: {
             attributes: {
-                class: "min-h-[156px] border rounded-md bg-slate-50 py-2 px-3 focus:outline-none",
+                class: "min-h-[50vh] sm:min-h-55vh] border-[#181818] border-[1px] rounded-md bg-grayish py-2 px-3 focus:outline-none overflow-scroll scrollbar-hide",
             },
             handleDrop(view, event) {
                 const file = event.dataTransfer?.files?.[0];
@@ -67,23 +67,21 @@ export default function Editor({
                     MAX_IMAGE_SIZE_MB * 1024 * 1024
                 ) {
                     alert(
-                        "이미지 크기가 너무 큽니다. 25MB 이하로 업로드해주세요."
+                        "이미지 크기가 너무 큽니다. 5MB 이하로 업로드해주세요."
                     );
                     return true;
                 }
 
                 const reader = new FileReader();
                 reader.onload = () => {
-                    const base64 = reader.result;
-                    const { schema } = view.state;
-                    const node = schema.nodes.image.create({
-                        src: base64,
-                    });
-                    const transaction =
-                        view.state.tr.replaceSelectionWith(
-                            node
-                        );
-                    view.dispatch(transaction);
+                    const base64 = reader.result as string;
+
+                    // ✅ 체이닝으로 삽입 (가장 안전)
+                    editor
+                        ?.chain()
+                        .focus()
+                        .setImage({ src: base64 })
+                        .run();
                 };
                 reader.readAsDataURL(file);
 
