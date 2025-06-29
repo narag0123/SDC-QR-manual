@@ -16,7 +16,7 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en">
-            <body className="font-spoqa text-[#181818] p-5 w-full max-w-[800px] mx-auto min-h-[100vh] bg-grayish overflow-x-hidden">
+            <body className="font-spoqa text-[#181818] p-5 w-full max-w-[800px] mx-auto min-h-[100dvh] bg-grayish overflow-x-hidden">
                 <Header />
                 {children}
             </body>
