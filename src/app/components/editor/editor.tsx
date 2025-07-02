@@ -51,11 +51,10 @@ export default function Editor({
         content: content || { type: "doc", content: [] },
         editorProps: {
             attributes: {
-                class: "min-h-[50vh] sm:min-h-55vh] border-[#181818] border-[1px] rounded-md bg-grayish py-2 px-3 focus:outline-none overflow-scroll scrollbar-hide",
+                class: "min-h-[50vh] sm:min-h-[55vh] border-[#181818] border-[1px] rounded-md bg-grayish py-2 px-3 focus:outline-none overflow-scroll scrollbar-hide",
             },
             handleDrop(view, event) {
                 const file = event.dataTransfer?.files?.[0];
-
                 if (
                     !file ||
                     !file.type.startsWith("image/")
@@ -75,8 +74,6 @@ export default function Editor({
                 const reader = new FileReader();
                 reader.onload = () => {
                     const base64 = reader.result as string;
-
-                    // ✅ 체이닝으로 삽입 (가장 안전)
                     editor
                         ?.chain()
                         .focus()
@@ -84,8 +81,43 @@ export default function Editor({
                         .run();
                 };
                 reader.readAsDataURL(file);
-
                 return true;
+            },
+            handlePaste(view, event) {
+                const items = event.clipboardData?.items;
+                if (!items) return false;
+
+                for (const item of items) {
+                    if (item.type.startsWith("image/")) {
+                        const file = item.getAsFile();
+                        if (!file) continue;
+
+                        if (
+                            file.size >
+                            MAX_IMAGE_SIZE_MB * 1024 * 1024
+                        ) {
+                            alert(
+                                "이미지 크기가 너무 큽니다. 5MB 이하로 업로드해주세요."
+                            );
+                            return true;
+                        }
+
+                        const reader = new FileReader();
+                        reader.onload = () => {
+                            const base64 =
+                                reader.result as string;
+                            editor
+                                ?.chain()
+                                .focus()
+                                .setImage({ src: base64 })
+                                .run();
+                        };
+                        reader.readAsDataURL(file);
+                        return true;
+                    }
+                }
+
+                return false;
             },
         },
         onUpdate: ({ editor }) => {
