@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@floating-ui/react": "^0.27.13",
+    "@radix-ui/react-dropdown-menu": "^2.1.15",
     "@radix-ui/react-slot": "^1.2.3",
     "@radix-ui/react-toggle": "^1.1.9",
     "@tiptap/extension-bubble-menu": "^2.23.0",

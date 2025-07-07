@@ -146,13 +146,14 @@ export default function PostDetailPage() {
                     {post.title}
                 </h1>
                 <div className="flex gap-3">
-                    <div className="min-h-full border-[0.5px] border-black"></div>
+                    <div className="min-h-full border-l-[0.5px] border-black"></div>
                     <button
                         onClick={handleEdit}
-                        className="text-blue-500"
+                        // className="text-blue-500"
                     >
                         수정하기
                     </button>
+                    <div className="min-h-full border-l-[0.5px] border-black"></div>
                     <button
                         onClick={handleDelete}
                         className="text-red-500"
