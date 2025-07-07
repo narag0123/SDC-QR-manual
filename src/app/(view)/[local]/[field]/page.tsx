@@ -15,6 +15,7 @@ import {
 } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { JSONContent } from "@tiptap/react";
+import Progressive from "@/app/components/progressive";
 
 interface Props {
     local: string;
@@ -46,7 +47,8 @@ export default function FieldPage({
     const localPathName = usePathname().split("/")[1];
     const router = useRouter();
     const arr = [samplePost];
-    const [posts, setPosts] = useState<Post[]>([]);
+    const [posts, setPosts] = useState<Post[] | null>(null);
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         setLocalName(convertLocalNameEN2KR(localPathName));
@@ -61,6 +63,8 @@ export default function FieldPage({
                 );
                 const data = await res.json();
                 setPosts(data);
+                setIsLoading(false);
+
                 console.log(data);
             } catch (error) {
                 console.error("게시글 로딩 실패:", error);
@@ -82,8 +86,9 @@ export default function FieldPage({
                 + 새글작성
             </div>
             <Hr_line />
+
             <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8 gap-4 mt-3">
-                {posts.map((e, i) => {
+                {posts?.map((e, i) => {
                     return (
                         <a
                             href={`/${local}/${field}/${i}`}

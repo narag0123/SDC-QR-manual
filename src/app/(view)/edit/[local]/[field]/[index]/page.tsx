@@ -162,17 +162,19 @@ export default function EditPostPage() {
             </div>
 
             {/* 제목 */}
-            <div className="py-3">
-                <input
-                    type="text"
-                    placeholder="제목을 입력하세요"
-                    value={title}
-                    onChange={(e) =>
-                        setTitle(e.target.value)
-                    }
-                    className="w-full border-[1px] border-[#181818] rounded bg-grayish px-3 py-2"
-                />
-            </div>
+            {post && (
+                <div className="py-3">
+                    <input
+                        type="text"
+                        placeholder="제목을 입력하세요"
+                        value={title}
+                        onChange={(e) =>
+                            setTitle(e.target.value)
+                        }
+                        className="w-full border-[1px] border-[#181818] rounded bg-grayish px-3 py-2"
+                    />
+                </div>
+            )}
 
             {/* 에디터 */}
             {/* 에디터: 로드되기 전엔 보여주지 않음 */}
