@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation"; // 추가
+
 import { useParams } from "next/navigation";
 import {
     useEditor,
@@ -27,27 +29,8 @@ interface Post {
 export default function PostDetailPage() {
     const { local, field, index } = useParams();
     const [post, setPost] = useState<Post | null>(null);
+    const router = useRouter();
 
-    // const editor = useEditor({
-    //     editable: false,
-    //     extensions: [
-    //         StarterKit,
-    //         Highlight,
-    //         Image.configure({
-    //             inline: false,
-    //             HTMLAttributes: {
-    //                 class: "w-full h-auto rounded my-2",
-    //             },
-    //         }),
-    //         TextAlign.configure({
-    //             types: ["heading", "paragraph"],
-    //         }),
-    //     ],
-    //     content: {
-    //         type: "doc",
-    //         content: [],
-    //     }, // 초기 content 비워둠
-    // });
     const editor = useEditor({
         editable: false, // 읽기 전용
         extensions: [
@@ -123,8 +106,38 @@ export default function PostDetailPage() {
         post?.content?.content?.some(
             (node) =>
                 node.type === "heading" &&
-                [1, 2].includes(node.attrs?.level)
+                [1, 2, 3].includes(node.attrs?.level)
         ) ?? false;
+
+    const handleDelete = async () => {
+        const confirmed = confirm(
+            "정말로 이 글을 삭제하시겠습니까?"
+        );
+        if (!confirmed) return;
+
+        try {
+            const res = await fetch(
+                `/api/post/${local}/${field}/${index}`,
+                {
+                    method: "DELETE",
+                }
+            );
+
+            if (!res.ok) {
+                throw new Error("삭제 실패");
+            }
+
+            alert("삭제되었습니다.");
+            router.push("/"); // 삭제 후 홈으로 이동 (원하면 다른 경로로)
+        } catch (err) {
+            console.error(err);
+            alert("삭제 중 오류가 발생했습니다.");
+        }
+    };
+
+    const handleEdit = () => {
+        router.push(`/edit/${local}/${field}/${index}`);
+    };
 
     return (
         <div>
@@ -134,7 +147,18 @@ export default function PostDetailPage() {
                 </h1>
                 <div className="flex gap-3">
                     <div className="min-h-full border-[0.5px] border-black"></div>
-                    <button>수정하기</button>
+                    <button
+                        onClick={handleEdit}
+                        className="text-blue-500"
+                    >
+                        수정하기
+                    </button>
+                    <button
+                        onClick={handleDelete}
+                        className="text-red-500"
+                    >
+                        삭제하기
+                    </button>
                 </div>
             </div>
             <Hr_line />

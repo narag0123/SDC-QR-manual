@@ -87,7 +87,7 @@ export default function FieldPage({
                     return (
                         <a
                             href={`/${local}/${field}/${i}`}
-                            className="flex flex-col items-center justify-center my-3"
+                            className="flex flex-col items-center justify-center my-3 text-center"
                             key={i}
                         >
                             <img src="/img/file.svg" />

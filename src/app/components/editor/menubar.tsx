@@ -147,35 +147,6 @@ export default function MenuBar({
             pressed: editor.isActive("highlight"),
         },
 
-        // {
-        //     icon: <ImagePlus className="size-4" />,
-        //     onClick: async () => {
-        //         const input =
-        //             document.createElement("input");
-        //         input.type = "file";
-        //         input.accept = "image/*";
-
-        //         input.onchange = () => {
-        //             const file = input.files?.[0];
-        //             if (!file) return;
-
-        //             const reader = new FileReader();
-        //             reader.onload = () => {
-        //                 const base64 =
-        //                     reader.result as string;
-        //                 editor
-        //                     .chain()
-        //                     .focus()
-        //                     .setImage({ src: base64 })
-        //                     .run();
-        //             };
-        //             reader.readAsDataURL(file);
-        //         };
-
-        //         input.click();
-        //     },
-        //     pressed: false, // 이미지에는 pressed 상태 필요 없음
-        // },
         {
             icon: <ImagePlus className="size-4" />,
             onClick: async () => {
@@ -218,7 +189,7 @@ export default function MenuBar({
     ];
 
     return (
-        <div className="border-[1px] border-[#181818] rounded-md p-1 mb-1 bg-grayish  space-x-2 z-50">
+        <div className="sticky top-0 z-50 border border-[#181818] rounded-md p-1 mb-1 bg-grayish space-x-2">
             {Options.map((option, index) => (
                 <Toggle
                     key={index}

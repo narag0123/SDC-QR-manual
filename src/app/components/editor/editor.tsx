@@ -1,4 +1,3 @@
-// ✅ editor.tsx
 "use client";
 
 import {
@@ -11,6 +10,7 @@ import MenuBar from "./menubar";
 import Highlight from "@tiptap/extension-highlight";
 import TextAlign from "@tiptap/extension-text-align";
 import Image from "@tiptap/extension-image";
+import { useEffect, useRef } from "react";
 
 interface RichTextEditorProps {
     content: JSONContent | null;
@@ -22,6 +22,7 @@ export default function Editor({
     onChange,
 }: RichTextEditorProps) {
     const MAX_IMAGE_SIZE_MB = 5;
+    const didSetContentRef = useRef(false); // 처음에만 setContent 하기 위한 ref
 
     const editor = useEditor({
         extensions: [
@@ -53,80 +54,118 @@ export default function Editor({
             attributes: {
                 class: "min-h-[50vh] sm:min-h-[55vh] border-[#181818] border-[1px] rounded-md bg-grayish py-2 px-3 focus:outline-none overflow-scroll scrollbar-hide",
             },
+
+            // ✅ 이미지 드래그 앤 드롭
             handleDrop(view, event) {
-                const file = event.dataTransfer?.files?.[0];
-                if (
-                    !file ||
-                    !file.type.startsWith("image/")
-                )
+                const files = event.dataTransfer?.files;
+                if (!files || files.length === 0)
                     return false;
 
-                if (
-                    file.size >
-                    MAX_IMAGE_SIZE_MB * 1024 * 1024
-                ) {
-                    alert(
-                        "이미지 크기가 너무 큽니다. 5MB 이하로 업로드해주세요."
-                    );
-                    return true;
-                }
+                Array.from(files).forEach((file, index) => {
+                    if (!file.type.startsWith("image/"))
+                        return;
 
-                const reader = new FileReader();
-                reader.onload = () => {
-                    const base64 = reader.result as string;
-                    editor
-                        ?.chain()
-                        .focus()
-                        .setImage({ src: base64 })
-                        .run();
-                };
-                reader.readAsDataURL(file);
+                    if (
+                        file.size >
+                        MAX_IMAGE_SIZE_MB * 1024 * 1024
+                    ) {
+                        alert(
+                            "이미지 크기가 너무 큽니다. 5MB 이하로 업로드해주세요."
+                        );
+                        return;
+                    }
+
+                    const reader = new FileReader();
+                    reader.onload = () => {
+                        const base64 =
+                            reader.result as string;
+                        editor?.commands.insertContent({
+                            type: "image",
+                            attrs: { src: base64 },
+                        });
+                    };
+                    reader.readAsDataURL(file);
+                });
+
                 return true;
             },
+
+            // ✅ 이미지 복사 붙여넣기
             handlePaste(view, event) {
                 const items = event.clipboardData?.items;
-                if (!items) return false;
+                if (!items || items.length === 0)
+                    return false;
 
-                for (const item of items) {
-                    if (item.type.startsWith("image/")) {
-                        const file = item.getAsFile();
-                        if (!file) continue;
+                let handled = false;
 
-                        if (
-                            file.size >
-                            MAX_IMAGE_SIZE_MB * 1024 * 1024
-                        ) {
-                            alert(
-                                "이미지 크기가 너무 큽니다. 5MB 이하로 업로드해주세요."
-                            );
-                            return true;
-                        }
+                Array.from(items).forEach((item, index) => {
+                    if (!item.type.startsWith("image/"))
+                        return;
 
-                        const reader = new FileReader();
-                        reader.onload = () => {
-                            const base64 =
-                                reader.result as string;
-                            editor
-                                ?.chain()
-                                .focus()
-                                .setImage({ src: base64 })
-                                .run();
-                        };
-                        reader.readAsDataURL(file);
-                        return true;
+                    const file = item.getAsFile();
+                    if (!file) return;
+
+                    if (
+                        file.size >
+                        MAX_IMAGE_SIZE_MB * 1024 * 1024
+                    ) {
+                        console.warn(
+                            `클립보드 이미지 ${
+                                index + 1
+                            } 너무 큼`
+                        );
+                        return;
                     }
-                }
 
-                return false;
+                    const reader = new FileReader();
+                    reader.onload = () => {
+                        const base64 =
+                            reader.result as string;
+                        console.log(
+                            `클립보드 이미지 ${
+                                index + 1
+                            } 삽입 시도`
+                        );
+
+                        // insertContent를 통해 순차 삽입
+                        editor?.commands.insertContent({
+                            type: "image",
+                            attrs: { src: base64 },
+                        });
+
+                        console.log(
+                            `클립보드 이미지 ${
+                                index + 1
+                            } 삽입 완료`
+                        );
+                    };
+                    reader.readAsDataURL(file);
+
+                    handled = true;
+                });
+
+                return handled;
             },
         },
+
         onUpdate: ({ editor }) => {
             onChange(editor.getJSON());
         },
     });
 
+    useEffect(() => {
+        if (
+            editor &&
+            content &&
+            !didSetContentRef.current
+        ) {
+            editor.commands.setContent(content, false);
+            didSetContentRef.current = true;
+        }
+    }, [editor, content]);
+
     return (
-        <div>
+        <div className="relative">
             <MenuBar editor={editor} />
             <EditorContent
                 editor={editor}
