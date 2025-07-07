@@ -9,6 +9,18 @@ const config: Config = {
     ],
     theme: {
         extend: {
+            keyframes: {
+                "bounce-dot": {
+                    "0%, 80%, 100%": {
+                        transform: "scale(0)",
+                    },
+                    "40%": { transform: "scale(1)" },
+                },
+            },
+            animation: {
+                "dot-bounce":
+                    "bounce-dot 1.4s infinite ease-in-out both",
+            },
             fontFamily: {
                 spoqa: [
                     '"Spoqa Han Sans Neo"',

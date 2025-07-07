@@ -6,6 +6,7 @@ import Editor from "@/app/components/editor/editor";
 import { JSONContent } from "@tiptap/react";
 import { useParams, useRouter } from "next/navigation";
 import { convertLocalNameKR2EN } from "@/app/(services)/convert/convert_localName";
+import Progressive from "@/app/components/progressive";
 
 export default function EditPostPage() {
     const { local, field, index } = useParams();
@@ -174,8 +175,15 @@ export default function EditPostPage() {
             </div>
 
             {/* 에디터 */}
-            <Editor content={post} onChange={onChange} />
-
+            {/* 에디터: 로드되기 전엔 보여주지 않음 */}
+            {post ? (
+                <Editor
+                    content={post}
+                    onChange={onChange}
+                />
+            ) : (
+                <Progressive />
+            )}
             {/* 제출 */}
             <div className="w-full flex justify-center">
                 <button

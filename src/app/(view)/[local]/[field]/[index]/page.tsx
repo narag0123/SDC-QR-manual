@@ -15,6 +15,7 @@ import TextAlign from "@tiptap/extension-text-align";
 import Image from "@tiptap/extension-image";
 import Hr_line from "@/app/components/hr_line";
 import TableOfContents from "@/app/components/editor/tableOfContents";
+import Progressive from "@/app/components/progressive";
 
 interface Post {
     _id: string;
@@ -99,7 +100,7 @@ export default function PostDetailPage() {
         }
     }, [editor, post]);
 
-    if (!post || !editor) return <div>불러오는 중...</div>;
+    if (!post || !editor) return <Progressive />;
 
     // TOC 필요 여부 판단
     const shouldRenderTOC =
