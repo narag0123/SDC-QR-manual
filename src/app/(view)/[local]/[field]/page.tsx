@@ -72,6 +72,11 @@ export default function FieldPage({
         };
 
         fetchPosts();
+        console.log(
+            posts?.sort((a, b) =>
+                a.title.localeCompare(b.title)
+            )
+        );
     }, [local, field]);
 
     return (

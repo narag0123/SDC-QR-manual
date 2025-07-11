@@ -11,6 +11,8 @@ import Editor from "@/app/components/editor/editor";
 import { JSONContent } from "@tiptap/react";
 import { useRouter } from "next/navigation";
 import { convertLocalNameKR2EN } from "@/app/(services)/convert/convert_localName";
+import { field_name } from "@/app/(model)/data/index_data";
+import { convertFieldEN } from "@/app/(services)/convert/convert_index";
 
 export default function PostNew() {
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -125,7 +127,19 @@ export default function PostNew() {
                         }}
                         className="border px-4 py-2 rounded bg-grayish"
                     >
-                        <option value="electricity">
+                        {field_name.map((e, i) => {
+                            return (
+                                <option
+                                    key={i}
+                                    value={`${convertFieldEN(
+                                        i + 1
+                                    )}`}
+                                >
+                                    {e}
+                                </option>
+                            );
+                        })}
+                        {/* <option value="electricity">
                             전기
                         </option>
                         <option value="mechanic">
@@ -136,7 +150,7 @@ export default function PostNew() {
                         </option>
                         <option value="fireservice">
                             소방
-                        </option>
+                        </option> */}
                     </select>
                 </div>
             </div>

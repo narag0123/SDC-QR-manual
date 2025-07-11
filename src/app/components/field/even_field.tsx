@@ -23,7 +23,7 @@ export const Even_field = ({ index }: Props) => {
             )}/${convertFieldEN(index)}`}
         >
             {/* <Hr_line /> */}
-            <div className="flex justify-between items-center py-3">
+            <div className="flex justify-between items-center py-2">
                 <div className="flex items-center">
                     <img src="/img/arrow.svg" />
                 </div>

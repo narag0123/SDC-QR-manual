@@ -8,6 +8,8 @@ export const convertFieldNameKR2EN = (name: string) => {
             return "telecommunication";
         case "소방":
             return "fireservice";
+        case "승강기":
+            return "elevator";
         default:
             return "convertFieldNameKR2EN뭔가잘못됨";
     }
@@ -23,6 +25,8 @@ export const convertFieldNameEN2KR = (name: string) => {
             return "통신";
         case "fireservice":
             return "소방";
+        case "elevator":
+            return "승강기";
         default:
             return "convertFieldNameEN2KR뭔가잘못됨";
     }

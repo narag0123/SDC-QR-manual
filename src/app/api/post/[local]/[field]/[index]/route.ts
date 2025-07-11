@@ -1,6 +1,7 @@
 import { connectDB } from "@/app/api/mongodb-config";
 import { NextResponse } from "next/server";
 import { ObjectId } from "mongodb";
+import { convertLocalNameEN2KR } from "@/app/(services)/convert/convert_localName";
 // app/api/post/[local]/[field]/[index]/route.ts
 
 interface Params {
@@ -107,63 +108,6 @@ export async function DELETE(
     }
 }
 
-// export async function PUT(
-//     req: Request,
-//     {
-//         params,
-//     }: {
-//         params: {
-//             local: string;
-//             field: string;
-//             index: string;
-//         };
-//     }
-// ) {
-//     const { local, field, index } = params;
-//     const idx = parseInt(index);
-//     const body = await req.json();
-
-//     try {
-//         const client = await connectDB;
-//         const db = client.db("sdc-qr-manual");
-
-//         // 기존 글 찾기
-//         const posts = await db
-//             .collection(local)
-//             .find({ field })
-//             .sort({ createdAt: -1 })
-//             .toArray();
-
-//         const targetPost = posts[idx];
-//         if (!targetPost) {
-//             return NextResponse.json(
-//                 { error: "Post not found" },
-//                 { status: 404 }
-//             );
-//         }
-
-//         // 수정
-//         await db.collection(local).updateOne(
-//             { _id: new ObjectId(targetPost._id) },
-//             {
-//                 $set: {
-//                     title: body.title,
-//                     content: body.content,
-//                     updatedAt: new Date(),
-//                 },
-//             }
-//         );
-
-//         return NextResponse.json({ success: true });
-//     } catch (err) {
-//         console.error("수정 실패", err);
-//         return NextResponse.json(
-//             { error: "Server error" },
-//             { status: 500 }
-//         );
-//     }
-// }
-
 export async function PUT(
     req: Request,
     {
@@ -211,6 +155,7 @@ export async function PUT(
             await db.collection(body.local).insertOne({
                 title: body.title,
                 field: body.field,
+                local: convertLocalNameEN2KR(body.local),
                 content: body.content,
                 createdAt: targetPost.createdAt,
                 updatedAt: new Date(),
@@ -228,6 +173,9 @@ export async function PUT(
                     $set: {
                         title: body.title,
                         field: body.field,
+                        local: convertLocalNameEN2KR(
+                            body.local
+                        ),
                         content: body.content,
                         updatedAt: new Date(),
                     },

@@ -7,6 +7,8 @@ import { JSONContent } from "@tiptap/react";
 import { useParams, useRouter } from "next/navigation";
 import { convertLocalNameKR2EN } from "@/app/(services)/convert/convert_localName";
 import Progressive from "@/app/components/progressive";
+import { field_name } from "@/app/(model)/data/index_data";
+import { convertFieldEN } from "@/app/(services)/convert/convert_index";
 
 export default function EditPostPage() {
     const { local, field, index } = useParams();
@@ -35,6 +37,7 @@ export default function EditPostPage() {
         };
 
         fetchPost();
+        console.log(localName);
     }, [local, field, index]);
 
     // 📤 수정 요청
@@ -145,18 +148,18 @@ export default function EditPostPage() {
                         }
                         className="border px-4 py-2 rounded bg-grayish"
                     >
-                        <option value="electricity">
-                            전기
-                        </option>
-                        <option value="mechanic">
-                            기계
-                        </option>
-                        <option value="telecommunication">
-                            통신
-                        </option>
-                        <option value="fireservice">
-                            소방
-                        </option>
+                        {field_name.map((e, i) => {
+                            return (
+                                <option
+                                    key={i}
+                                    value={convertFieldEN(
+                                        i + 1
+                                    )}
+                                >
+                                    {e}
+                                </option>
+                            );
+                        })}
                     </select>
                 </div>
             </div>

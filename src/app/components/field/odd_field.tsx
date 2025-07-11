@@ -27,7 +27,7 @@ export const Odd_field = ({ index }: Props) => {
                 }
             }}
         >
-            <div className="flex justify-between items-center py-3">
+            <div className="flex justify-between items-center py-2">
                 <div className="flex items-center gap-5 ">
                     <h1 className="font-black text-[42px]">
                         0{index}

@@ -8,6 +8,8 @@ export const convertFieldKR = (i: number) => {
             return "통신";
         case 4:
             return "소방";
+        case 5:
+            return "승강기";
         default:
             "";
     }
@@ -23,6 +25,8 @@ export const convertFieldEN = (i: number) => {
             return "telecommunication";
         case 4:
             return "fireservice";
+        case 5:
+            return "elevator";
         default:
             "";
     }
@@ -38,6 +42,8 @@ export const convertFieldIndex = (name: string): number => {
             return 3;
         case "fireservice":
             return 4;
+        case "elevator":
+            return 5;
         default:
             return 0;
     }
