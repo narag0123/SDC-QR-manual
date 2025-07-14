@@ -33,7 +33,7 @@ export async function GET(
         const posts = await db
             .collection(local)
             .find({ field })
-            .sort({ createdAt: -1 })
+            .sort({ title: 1, createdAt: -1 })
             .toArray();
 
         if (!posts[idx]) {

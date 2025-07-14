@@ -64,19 +64,12 @@ export default function FieldPage({
                 const data = await res.json();
                 setPosts(data);
                 setIsLoading(false);
-
-                console.log(data);
             } catch (error) {
                 console.error("게시글 로딩 실패:", error);
             }
         };
 
         fetchPosts();
-        console.log(
-            posts?.sort((a, b) =>
-                a.title.localeCompare(b.title)
-            )
-        );
     }, [local, field]);
 
     return (
@@ -97,7 +90,7 @@ export default function FieldPage({
                     return (
                         <a
                             href={`/${local}/${field}/${i}`}
-                            className="flex flex-col items-center justify-center my-3 text-center"
+                            className="flex flex-col items-center justify-start my-3 text-center"
                             key={i}
                         >
                             <img src="/img/file.svg" />

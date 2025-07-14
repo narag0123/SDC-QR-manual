@@ -32,7 +32,7 @@ export async function GET(
                 { field },
                 { projection: { _id: 1, title: 1 } }
             )
-            .sort({ createdAt: -1 })
+            .sort({ title: 1, createdAt: -1 })
             .toArray();
 
         return NextResponse.json(posts);
