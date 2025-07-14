@@ -82,7 +82,7 @@ export async function DELETE(
         const posts = await db
             .collection(local)
             .find({ field })
-            .sort({ createdAt: -1 })
+            .sort({ title: 1, createdAt: -1 })
             .toArray();
 
         const postToDelete = posts[idx];
@@ -136,7 +136,7 @@ export async function PUT(
         const posts = await db
             .collection(prevLocal)
             .find({ field: prevField })
-            .sort({ createdAt: -1 })
+            .sort({ title: 1, createdAt: -1 })
             .toArray();
 
         const targetPost = posts[idx];
